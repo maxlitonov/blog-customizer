@@ -7,8 +7,17 @@ import styles from './ArticleParamsForm.module.scss';
 import { FormEvent, MouseEvent, useEffect, useRef, useState } from 'react';
 import {
 	ArticleStateType,
+	backgroundColors,
+	contentWidthArr,
 	defaultArticleState,
+	fontColors,
+	fontFamilyOptions,
+	fontSizeOptions,
+	OptionType,
 } from 'src/constants/articleProps';
+import { Select } from 'src/ui/select';
+import { RadioGroup } from 'src/ui/radio-group';
+import { Separator } from 'src/ui/separator';
 
 type TArticleParamsFormProps = {
 	isOpen: boolean;
@@ -49,6 +58,10 @@ export const ArticleParamsForm = ({
 		setFormState(defaultArticleState);
 	};
 
+	const handleOptionChange = (option: string, value: OptionType) => {
+		setFormState({ ...formState, [option]: value });
+	};
+
 	return (
 		<>
 			<ArrowButton isOpen={isOpen} onClick={onArrowClick} />
@@ -60,12 +73,52 @@ export const ArticleParamsForm = ({
 					onSubmit={handleSubmit}
 					onReset={handleReset}
 					className={styles.form}>
-					<Text weight={800} as='h1' uppercase size={31}>
+					<Text weight={800} as='h1' uppercase={true} size={31}>
 						Задайте параметры
 					</Text>
-					<Text weight={800} as='p' uppercase size={12}>
-						Шрифт
-					</Text>
+
+					<Select
+						options={fontFamilyOptions}
+						title='Шрифт'
+						selected={formState.fontFamilyOption}
+						onChange={(value) => {
+							handleOptionChange('fontFamilyOption', value);
+						}}></Select>
+
+					<RadioGroup
+						name='Размер шрифта'
+						options={fontSizeOptions}
+						selected={formState.fontSizeOption}
+						onChange={(value) => {
+							handleOptionChange('fontSizeOption', value);
+						}}
+						title='Размер шрифта'></RadioGroup>
+
+					<Select
+						options={fontColors}
+						title='Цвет шрифта'
+						selected={formState.fontColor}
+						onChange={(value) => {
+							handleOptionChange('fontColor', value);
+						}}></Select>
+
+					<Separator></Separator>
+
+					<Select
+						options={backgroundColors}
+						title='Цвет фона'
+						selected={formState.backgroundColor}
+						onChange={(value) => {
+							handleOptionChange('backgroundColor', value);
+						}}></Select>
+
+					<Select
+						options={contentWidthArr}
+						title='Ширина контента'
+						selected={formState.contentWidth}
+						onChange={(value) => {
+							handleOptionChange('contentWidth', value);
+						}}></Select>
 
 					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' htmlType='reset' type='clear' />
