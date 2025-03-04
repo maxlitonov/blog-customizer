@@ -65,7 +65,6 @@ export const ArticleParamsForm = ({
 	return (
 		<>
 			<ArrowButton isOpen={isOpen} onClick={onArrowClick} />
-
 			<aside
 				ref={formRef}
 				className={clsx(styles.container, isOpen && styles.container_open)}>
