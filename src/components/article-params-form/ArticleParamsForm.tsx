@@ -20,33 +20,28 @@ import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
 
 type TArticleParamsFormProps = {
-	isOpen: boolean;
-	onArrowClick: () => void;
 	onSubmit: (state: ArticleStateType) => void;
 };
 
-export const ArticleParamsForm = ({
-	isOpen,
-	onArrowClick,
-	onSubmit,
-}: TArticleParamsFormProps) => {
+export const ArticleParamsForm = ({ onSubmit }: TArticleParamsFormProps) => {
 	const formRef = useRef<HTMLElement | null>(null);
+	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [formState, setFormState] = useState(defaultArticleState);
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent | Event) => {
 			if (formRef.current && !formRef.current.contains(event.target as Node)) {
-				onArrowClick();
+				toggleForm();
 			}
 		};
 
-		if (isOpen) {
+		if (isFormOpen) {
 			document.addEventListener('mousedown', handleClickOutside);
 		}
 
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, [isOpen]);
+	}, [isFormOpen]);
 	const handleSubmit = (evt: FormEvent) => {
 		evt.preventDefault();
 		onSubmit(formState);
@@ -62,13 +57,17 @@ export const ArticleParamsForm = ({
 		setFormState({ ...formState, [option]: value });
 	};
 
+	const toggleForm = () => {
+		setIsFormOpen((prev) => !prev);
+	};
+
 	return (
 		<>
-			<ArrowButton isOpen={isOpen} onClick={onArrowClick} />
+			<ArrowButton isOpen={isFormOpen} onClick={toggleForm} />
 
 			<aside
 				ref={formRef}
-				className={clsx(styles.container, isOpen && styles.container_open)}>
+				className={clsx(styles.container, isFormOpen && styles.container_open)}>
 				<form
 					onSubmit={handleSubmit}
 					onReset={handleReset}
